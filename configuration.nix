@@ -22,6 +22,8 @@
     "openssl-1.1.1w"
   ];
 
+
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -200,6 +202,11 @@
     enableCompletion = true;
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
+    shellAliases = {
+      # Теперь вместо длинной строки ты сможешь писать просто: sudo rebuild
+      rebuild = "sudo nixos-rebuild switch --flake '/etc/nixos/#nixos'";
+      nixrebuild = "cd /etc/nixos && git add . && sudo nixos-rebuild switch --flake '.#nixos' && cd -";
+    };
 
     ohMyZsh = {
       enable = true;
