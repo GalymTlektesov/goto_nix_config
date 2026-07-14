@@ -2,7 +2,7 @@
   description = "Моя конфигурация NixOS на Flakes";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     
     # Добавляем репозиторий AAGL как официальный input нашего флейка
     aagl = {
