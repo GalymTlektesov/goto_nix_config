@@ -134,6 +134,7 @@
     temurin-bin
     pkgs.onlyoffice-desktopeditors
     pkgs.nvtopPackages.nvidia
+    oh-my-posh
 
     # Заменяем обычный python3 на версию с модулем websockets
     (python3.withPackages (ps: with ps; [
@@ -202,32 +203,34 @@
     enableCompletion = true;
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
+
+    # алиасы
     shellAliases = {
-      # Теперь вместо длинной строки ты сможешь писать просто: sudo rebuild
       rebuild = "sudo nixos-rebuild switch --flake '/etc/nixos/#nixos'";
       nixrebuild = "cd /etc/nixos && git add . && sudo nixos-rebuild switch --flake '.#nixos' && cd -";
     };
 
+    # Настройки Oh My Zsh
     ohMyZsh = {
       enable = true;
       plugins = [ "git" "sudo" ];
-      theme = "agnoster"; # <-- Поменяйте "robbyrussell" на "agnoster" (или "ys")
     };
 
+    # Единый блок инициализации при запуске терминала
+    # Сначала запускаем Oh My Posh, а затем выводим красивый fastfetch!
     interactiveShellInit = ''
+      eval "$(oh-my-posh init zsh --config ${pkgs.oh-my-posh}/share/oh-my-posh/themes/clean-detailed.omp.json)"
       ${pkgs.fastfetch}/bin/fastfetch
     '';
   };
 
+  # Твои шрифты
   fonts.packages = [
     pkgs.fira-code
     pkgs.fira-code-symbols
-    
-    # Новый синтаксис для NixOS 25.11 / 26.05
     pkgs.nerd-fonts.fira-code
   ];
 
-  # Указываем системе, что для пользователя goto оболочкой по умолчанию будет Zsh
   users.defaultUserShell = pkgs.zsh;
 
 
