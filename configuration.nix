@@ -5,12 +5,13 @@
 { config, pkgs, ... }:
 
 {
-
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
+      ./hyprland.nix
     ];
 
+  # для кодека в OBS
   nixpkgs.overlays = [
     (self: super: {
       obs-studio = super.obs-studio.override { cudaSupport = true; };
@@ -28,7 +29,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Переключаем систему на оптимизированное игровое ядро Zen (аналог CachyOS)
+  # Переключаем систему на оптимизированное игровое ядро Zen
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
   networking.hostName = "nixos"; # Имя вашего ПК в сети.
@@ -45,7 +46,13 @@
 # Настройки языка и локали
   i18n.defaultLocale = "ru_RU.UTF-8";
 
+  i18n.supportedLocales = [
+    "en_US.UTF-8/UTF-8"
+    "ru_RU.UTF-8/UTF-8"
+  ];
+
   i18n.extraLocaleSettings = {
+    LC_CTYPE = "ru_RU.UTF-8"; 
     LC_ADDRESS = "ru_RU.UTF-8";
     LC_IDENTIFICATION = "ru_RU.UTF-8";
     LC_MEASUREMENT = "ru_RU.UTF-8";
@@ -64,9 +71,12 @@
 
   # Configure keymap in X11
   services.xserver.xkb = {
-    layout = "us";
+    layout = "us,ru";
+    options = "grp:win_space_toggle";
     variant = "";
   };
+
+  console.useXkbConfig = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -81,7 +91,7 @@
     ];
   };
 
-  # Максимальное сжатие initrd для экономии места в /boot
+
   # boot.initrd.supportedFilesystems = [ "vfat" "btrfs" ]; # Оставляем только самое нужное для старта
   boot.initrd.compressor = "gzip -9";# сжатие 
 
@@ -102,24 +112,24 @@
     };
   };
 
-  # Список программ для ВСЕХ пользователей системы (только имена пакетов!)
+  # Список программ для ВСЕХ пользователей системы
   environment.systemPackages = with pkgs; [
-    vesktop               # Discord-клиент с поддержкой демонстрации экрана на Wayland
-    krita                 # Графический редактор
-    fastfetch             # Красивый вывод инфо о системе при запуске
+    vesktop 
+    krita 
+    fastfetch
     git
     brightnessctl
     evtest
     vlc
-    ffmpeg-full                    # Полная версия ffmpeg со всеми кодеками
+    ffmpeg-full
     cmatrix
     btop
     hollywood
     cava
     kdePackages.qtwebsockets
     kdePackages.qtstyleplugin-kvantum
-    obsidian              # База знаний и заметки Markdown
-    foliate               # Отличная стильная читалка электронных книг
+    obsidian 
+    foliate
     obs-studio
     sublime4
     kdePackages.kdenlive
@@ -136,14 +146,13 @@
     pkgs.nvtopPackages.nvidia
     oh-my-posh
 
-    # Заменяем обычный python3 на версию с модулем websockets
+    #python3 с модулем websockets
     (python3.withPackages (ps: with ps; [
       websockets
     ]))
-    # Сюда можно будет дописать другие программы через пробел, например: mangohud gimp
   ];
 
-  # Говорим системе использовать Kvantum как глобальный стиль для приложений Qt
+  #Kvantum для Qt
   qt = {
     enable = true;
     style = "kvantum";
@@ -158,16 +167,11 @@
     ];
   };
 
-  # геншин
-  programs.anime-game-launcher.enable = true;
+  programs.anime-game-launcher.enable = true; # genshin
+  programs.honkers-railway-launcher.enable = true; # hsr
+  programs.sleepy-launcher.enable = true; # zzz
 
-  # лаунчер для HSR
-  programs.honkers-railway-launcher.enable = true;
-
-  # лаунчер для ZZZ (Zenless Zone Zero)
-  programs.sleepy-launcher.enable = true;
-
-  # Включаем GameMode для оптимизации процессора
+  # Включаем GameMode
   programs.gamemode.enable = true;
 
   # Снимаем системные ограничения на количество открытых файлов и квоты памяти
@@ -176,55 +180,56 @@
     { domain = "*"; type = "-"; item = "memlock"; value = "unlimited"; }
   ];
 
-  # Включаем правильную подушку безопасности через zRam
+  # Включаем подушку безопасности через zRam
   zramSwap = {
     enable = true;
-    algorithm = "zstd"; # Самый быстрый алгоритм сжатия, идеален для Zen ядра
-    memoryPercent = 50;  # Позволит сжать фоновый хлам, освободив до 6-8 ГБ чистой ОЗУ для AoE4
+    algorithm = "zstd";
+    memoryPercent = 50;  # Swap
   };
 
-  # Инструктируем ядро Zen правильно балансировать память
+  # Настройки для Zen
   boot.kernel.sysctl = {
-    "vm.max_map_count" = 2147483642; # Базовое требование Steam
-    "vm.swappiness" = 100;            # Агрессивно вычищать Дискорд/Браузер в zRam, отдавая всю ОЗУ игре
-    "vm.vfs_cache_pressure" = 500;   # Не давать дисковому кэшу раздуваться во время каток
+    "vm.max_map_count" = 2147483642;
+    "vm.swappiness" = 100;
+    "vm.vfs_cache_pressure" = 500;
   };
 
 
-  # Включаем Steam и открываем нужные ему порты
+  # Включаем Steam
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
   };
 
+
+  # Настраеваем ZSH
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
 
-    # алиасы
+    # автоматизируем команды
     shellAliases = {
       rebuild = "sudo nixos-rebuild switch --flake '/etc/nixos/#nixos'";
       nixrebuild = "cd /etc/nixos && git add . && sudo nixos-rebuild switch --flake '.#nixos' && cd -";
     };
 
-    # Настройки Oh My Zsh
+    # Oh My Zsh
     ohMyZsh = {
       enable = true;
       plugins = [ "git" "sudo" ];
     };
 
-    # Единый блок инициализации при запуске терминала
-    # Сначала запускаем Oh My Posh, а затем выводим красивый fastfetch!
+    # То что будет работать при запуске терминала
     interactiveShellInit = ''
       eval "$(oh-my-posh init zsh --config ${pkgs.oh-my-posh}/share/oh-my-posh/themes/clean-detailed.omp.json)"
       ${pkgs.fastfetch}/bin/fastfetch
     '';
   };
 
-  # Твои шрифты
+  # Шрифты для терминала
   fonts.packages = [
     pkgs.fira-code
     pkgs.fira-code-symbols
@@ -246,37 +251,34 @@
   };
   
 
-  # локальный север для домашней страницы firefox
+  # локальный север для домашней страницы tartarus-startpage
   systemd.services.tartarus-startpage = {
   description = "Local Python server for Tartarus Startpage";
   after = [ "network.target" ];
   wantedBy = [ "multi-user.target" ];
 
   serviceConfig = {
-    # Укажите точный путь к папке с вашим проектом на NixOS
     ExecStart = "${pkgs.python3}/bin/python3 -m http.server 8080 --bind 127.0.0.1";
     WorkingDirectory = "/home/goto/tartarus-startpage";
     Restart = "always";
-    User = "goto"; # Ваше имя пользователя в системе
+    User = "goto";
   };
 };
 
   # --- НАСТРОЙКИ ВИДЕОКАРТЫ NVIDIA ---
   boot.kernelParams = [ 
     "nvidia.NVreg_PreserveVideoMemoryAllocations=1" 
-    # Ограничивает выделение хост-памяти драйвером Nvidia для буферов OpenGL/Vulkan
     "nvidia.NVreg_DeviceFileBufferSizeMB=32"
   ];
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
-    modesetting.enable = true; # Обязательно для Wayland
+    modesetting.enable = true;
     
-    # КРИТИЧЕСКИЙ ХАК ДЛЯ СНА: Включаем сохранение VRAM
-    powerManagement.enable = true; # раньше было false
+    powerManagement.enable = true; # Позволит сохранять VRAM, чтобы после спящего режима, видеокарта работала корректно
     powerManagement.finegrained = false;
     
-    open = false; # С твоей GTX 1650 строго оставляем false
+    open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
@@ -289,5 +291,6 @@
   # Версия состояния системы. Не менять.
   system.stateVersion = "26.05";
 
+  #Включаем flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
