@@ -29,8 +29,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Переключаем систему на оптимизированное игровое ядро Zen
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  # Переключаем систему на оптимизированное ядро
+  boot.kernelPackages = pkgs.linuxPackages_xanmod;
 
   networking.hostName = "nixos"; # Имя вашего ПК в сети.
 
@@ -187,7 +187,7 @@
     memoryPercent = 50;  # Swap
   };
 
-  # Настройки для Zen
+  # Настройки для ядра
   boot.kernel.sysctl = {
     "vm.max_map_count" = 2147483642;
     "vm.swappiness" = 100;
