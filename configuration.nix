@@ -30,7 +30,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Переключаем систему на оптимизированное ядро
-  boot.kernelPackages = pkgs.linuxPackages_xanmod;
+  #boot.kernelPackages = pkgs.linuxPackages_xanmod;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   networking.hostName = "nixos"; # Имя вашего ПК в сети.
 
@@ -192,6 +193,8 @@
     "vm.max_map_count" = 2147483642;
     "vm.swappiness" = 100;
     "vm.vfs_cache_pressure" = 500;
+    "vm.dirty_background_ratio" = 5;
+    "vm.dirty_ratio" = 10;
   };
 
 
@@ -267,6 +270,8 @@
 
   # --- НАСТРОЙКИ ВИДЕОКАРТЫ NVIDIA ---
   boot.kernelParams = [ 
+    "scsi_mod.use_blk_mq=1"
+    "elevator=bfq" # Включаем планировщик BFQ
     "nvidia.NVreg_PreserveVideoMemoryAllocations=1" 
     "nvidia.NVreg_DeviceFileBufferSizeMB=32"
   ];
