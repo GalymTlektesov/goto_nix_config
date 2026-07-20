@@ -1,7 +1,4 @@
-{ pkgs, ... }:
-
 {
-
   	programs.anime-game-launcher.enable = true; # genshin
     programs.honkers-railway-launcher.enable = true; # hsr
   	programs.sleepy-launcher.enable = true; # zzz
