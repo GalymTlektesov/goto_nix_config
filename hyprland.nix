@@ -14,6 +14,8 @@
     # Указываем подсказки для Qt/Gtk приложений, чтобы они запускались в режиме Wayland
     NIXOS_OZONE_HWACCEL = "1";
     MOZ_ENABLE_WAYLAND = "1"; # Для Firefox
+
+    __GL_GSYNC_ALLOWED = "0";
   };
 
   # Пакеты, которые нужны только в Hyprland (утилиты для скриншотов, панельки и т.д.)
@@ -26,5 +28,9 @@
     grim  # <-- ДЛЯ СКРИНШОТОВ
     slurp # <-- ДЛЯ ВЫБОРА ОБЛАСТИ МЫШКОЙ
     wl-clipboard
+    swww
+    mako
+    mpvpaper
+    swappy
   ];
 }

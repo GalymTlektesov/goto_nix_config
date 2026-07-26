@@ -43,6 +43,11 @@
     	pkgs.onlyoffice-desktopeditors
     	pkgs.nvtopPackages.nvidia
     	oh-my-posh
+    	lavat
+    	xfce.thunar
+    	xfce.tumbler
+    	nwg-look
+    	figlet
 
     	#python3 с модулем websockets
     	(python3.withPackages (ps: with ps; [
@@ -57,6 +62,7 @@
   	};
 
   	services.flatpak.enable = true;
+  	virtualisation.waydroid.enable = true;
 
   	environment.sessionVariables = {
     	QML2_IMPORT_PATH = [
