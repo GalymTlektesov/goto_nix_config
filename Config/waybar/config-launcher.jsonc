@@ -1,0 +1,47 @@
+{
+    "position": "left",
+    "layer": "top",
+    "width": 60,
+    "height": 690,
+    "margin-left": 0,
+    "margin-top": 35,
+    "margin-bottom": 0,
+
+    // Список всех модулей-значков по порядку
+    "modules-left": [
+        "custom/terminal",
+        "custom/browser",
+        "custom/files",
+        "custom/telegram",
+        "custom/vesktop",
+        "custom/steam",
+        "custom/anime",
+        "custom/sleepy",
+        "custom/factorio",
+        "custom/warhammer",
+        "custom/aoe4",
+        "custom/tlauncher",
+        "custom/battlenet",
+        "custom/obs"
+    ],
+
+    // Описание каждого значка
+    "custom/terminal": { "format": "", "on-click": "kitty", "tooltip-format": "Kitty" },
+    "custom/browser": { "format": "", "on-click": "firefox", "tooltip-format": "Firefox" },
+    "custom/files": { "format": "󰉋", "on-click": "thunar", "tooltip-format": "Files (Thunar)" },
+    "custom/telegram": { "format": "", "on-click": "flatpak run org.telegram.desktop", "tooltip-format": "Telegram" },
+    "custom/vesktop": { "format": "", "on-click": "vesktop", "tooltip-format": "Vesktop (Discord)" },
+    "custom/steam": { "format": "", "on-click": "steam", "tooltip-format": "Steam" },
+    
+    // Лаунчеры и игры
+    "custom/anime": { "format": "", "on-click": "anime-game-launcher", "tooltip-format": "An Anime Game Launcher" },
+    "custom/sleepy": { "format": "󰵁", "on-click": "sleepy-launcher", "tooltip-format": "Sleepy Launcher (ZZZ)" },
+    "custom/factorio": { "format": "⚙️", "on-click": "steam steam://rungameid/427520", "tooltip-format": "Factorio" },
+    "custom/warhammer": { "format": "⚔️", "on-click": "steam steam://rungameid/1142710", "tooltip-format": "Total War: Warhammer III" },
+    "custom/aoe4": { "format": "🏰", "on-click": "steam steam://rungameid/1466860", "tooltip-format": "Age of Empires IV" },
+    
+    // Запуск через Lutris (если команды запуска другие, поправим)
+    "custom/tlauncher": { "format": "⛏️", "on-click": "lutris", "tooltip-format": "TLauncher (Lutris)" },
+    "custom/battlenet": { "format": "🌀", "on-click": "lutris", "tooltip-format": "Battle.net (Lutris)" },
+    "custom/obs": { "format": "󰕧", "on-click": "obs", "tooltip-format": "OBS Studio" }
+}

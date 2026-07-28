@@ -32,5 +32,10 @@
     mako
     mpvpaper
     swappy
+    ags
+    playerctl 
+    pamixer
+    curl
+    libnotify
   ];
 }

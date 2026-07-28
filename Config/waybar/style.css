@@ -1,0 +1,90 @@
+/* Общие настройки шрифта (используем FiraCode Nerd Font для иконок) */
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "FiraCode Nerd Font", "Comfortaa", sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    min-height: 0;
+}
+
+/* Сама подложка панели (делаем её полностью прозрачной, чтобы островки "парили") */
+window#waybar {
+    background-color: transparent;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+/* Настройки для каждого отдельного изолированного островка/модуля */
+.modules-left, .modules-center, .modules-right {
+    background-color: rgba(17, 17, 27, 0.75); /* Полупрозрачный темный фон */
+    border: 1px solid rgba(137, 180, 250, 0.2); /* Едва заметная неоновая рамка */
+    border-radius: 12px;
+    padding: 2px 10px;
+    margin-top: 5px;
+}
+
+.modules-left {
+    margin-left: 10px;
+}
+
+.modules-right {
+    margin-right: 10px;
+}
+
+/* Стилизация рабочих столов (Workspaces) */
+#workspaces button {
+    padding: 0 8px;
+    color: #cdd6f4;
+    background-color: transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+#workspaces button.active {
+    color: #11111b;
+    background-color: #89b4fa; /* Активный стол подсвечивается синим */
+}
+
+#workspaces button:hover {
+    background-color: rgba(137, 180, 250, 0.15);
+}
+
+/* Цвета для конкретных модулей */
+#clock {
+    color: #cdd6f4;
+}
+
+#window {
+    color: #b4befe;
+}
+
+#cpu {
+    color: #f38ba8;
+    margin-right: 15px;
+}
+
+#memory {
+    color: #fab387;
+    margin-right: 15px;
+}
+
+#pulseaudio {
+    color: #a6e3a1;
+    margin-right: 15px;
+}
+
+#network {
+    color: #94e2d5;
+}
+
+#tray {
+    margin-left: 10px;
+}
+
+#language {
+    color: #cba6f7;
+    margin-right: 15px;
+}
+
+@import url("style-launcher.css");

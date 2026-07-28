@@ -1,0 +1,73 @@
+/* Вырезаем под корень системные рамки и тени основного окна */
+window#waybar {
+    background-color: transparent;
+    background: transparent;
+    border: 0px solid transparent;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0;
+}
+
+/* Очищаем главный контейнер */
+#waybar.left {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+/* Наша идеальная скругленная панель */
+#waybar.left .modules-left {
+    background-color: rgba(30, 30, 46, 0.75);
+    
+    /* Вместо ломающих скосов делаем чистое глубокое скругление правой грани к окнам */
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    
+    /* Тонкий красивый кант справа, который подчеркнет дугу дока */
+    border-right: 2px solid rgba(203, 166, 247, 0.3);
+
+    padding: 15px 6px;
+    margin: 0;
+}
+
+/* Стили для всех значков приложений */
+#waybar.left #custom-terminal, #waybar.left #custom-browser, #waybar.left #custom-files, #waybar.left #custom-telegram, 
+#waybar.left #custom-vesktop, #waybar.left #custom-steam, #waybar.left #custom-anime, 
+#waybar.left #custom-sleepy, #waybar.left #custom-factorio, #waybar.left #custom-warhammer, 
+#waybar.left #custom-aoe4, #waybar.left #custom-tlauncher, #waybar.left #custom-battlenet, 
+#waybar.left #custom-obs {
+    font-size: 22px;
+    color: #cdd6f4;
+    background-color: rgba(45, 45, 70, 0.4);
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 12px;
+}
+
+/* Фиолетовая неоновая подсветка */
+#waybar.left #custom-terminal:hover, #waybar.left #custom-browser:hover, #waybar.left #custom-files:hover, #waybar.left #custom-telegram:hover, 
+#waybar.left #custom-vesktop:hover, #waybar.left #custom-steam:hover, #waybar.left #custom-anime:hover, 
+#waybar.left #custom-sleepy:hover, #waybar.left #custom-factorio:hover, #waybar.left #custom-warhammer:hover, 
+#waybar.left #custom-aoe4:hover, #waybar.left #custom-tlauncher:hover, #waybar.left #custom-battlenet:hover, 
+#waybar.left #custom-obs:hover {
+    background-color: #cba6f7;
+    color: #11111b;
+    box-shadow: 0 0 10px #cba6f7;
+}
+
+
+/* Выжигаем дефолтные рамки и фоны пустых контейнеров левого бара */
+window#waybar.left .modules-center,
+window#waybar.left .modules-right {
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    border-image: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0px;
+    min-height: 0px;
+}

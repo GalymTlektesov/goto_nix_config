@@ -1,0 +1,50 @@
+/* Общие настройки окна Wofi */
+window {
+    margin: 0px;
+    padding: 15px;
+    background-color: rgba(17, 17, 27, 0.85); /* Полупрозрачный темный фон */
+    border: 2px solid rgba(137, 180, 250, 0.3); /* Неоновая синяя рамка */
+    border-radius: 16px;
+    font-family: "FiraCode Nerd Font", "Comfortaa", sans-serif;
+    font-size: 14px;
+}
+
+/* Поле поиска/ввода текста */
+#input {
+    margin: 5px 5px 15px 5px;
+    padding: 8px 12px;
+    border: 1px solid rgba(137, 180, 250, 0.2);
+    border-radius: 8px;
+    background-color: rgba(30, 30, 46, 0.6);
+    color: #cdd6f4;
+}
+
+#input:focus {
+    border: 1px solid #89b4fa; /* Подсветка поля при вводе */
+}
+
+/* Контейнер списка приложений */
+#scroll {
+    margin: 5px;
+    padding: 5px;
+    background-color: transparent;
+}
+
+/* Каждый отдельный элемент списка (строка с программой) */
+#entry {
+    padding: 8px;
+    border-radius: 8px;
+    color: #cdd6f4;
+    background-color: transparent;
+}
+
+/* Элемент при наведении мыши или выборе стрелочками */
+#entry:selected {
+    background-color: #89b4fa; /* Активная строка окрасится в фирменный синий */
+    color: #11111b; /* Текст станет темным для контраста */
+}
+
+/* Текст внутри элементов */
+#text {
+    margin: 0px 5px;
+}

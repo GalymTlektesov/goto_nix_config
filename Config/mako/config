@@ -1,0 +1,15 @@
+font=Comfortaa,FiraCode Nerd Font 10
+background-color=#11111bdf
+text-color=#cdd6f4
+border-color=#89b4fa
+border-size=2
+border-radius=12
+progress-color=#313244
+
+margin=10,10
+padding=15
+default-timeout=5000
+
+[urgency=high]
+border-color=#f38ba8
+default-timeout=0
