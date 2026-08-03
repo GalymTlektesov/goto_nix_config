@@ -6,7 +6,8 @@
     "passthrough": false,
     "gtk-layer-shell": true,
     "height": 34,
-    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-left": [],
+    //"modules-left": ["custom/power",  "hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
     "modules-right": ["cpu", "memory", "pulseaudio", "hyprland/language", "network", "tray"],
 
@@ -66,4 +67,10 @@
         "format-en": "EN",
         "format-ru": "RU"
     },
+
+    "custom/power": {
+        "format": "󱄅",
+        "tooltip": false,
+        "on-click": "bash -c 'ags toggle power_menu &'"
+    }
 }

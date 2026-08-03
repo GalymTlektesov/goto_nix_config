@@ -1,39 +1,34 @@
 // https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
-$fg-color: #{"@theme_fg_color"};
+/*$fg-color: #{"@theme_fg_color"};
 $bg-color: #{"@theme_bg_color"};
+*/
 
 window.Bar {
     background: transparent;
-    color: $fg-color;
+    color: #cdd6f4;
     font-weight: bold;
-
     >centerbox {
-        background: $bg-color;
+        background: #11111b;;
         border-radius: 10px;
         margin: 8px;
     }
-
     button {
         border-radius: 8px;
         margin: 2px;
     }
-
     .equalizer-container {
     padding: 12px;
     background-color: rgba(26, 27, 38, 0.85);
     border-radius: 8px;
 }
-
     .eq-title {
         color: #c0caf5;
         font-weight: bold;
         font-size: 12px;
     }
-
     .eq-bars {
         margin-top: 4px;
     }
-
     .bar-col {
         min-width: 8px;
         min-height: 50px;
@@ -41,3 +36,100 @@ window.Bar {
         border-radius: 4px;
     }
 }
+
+/* Общие настройки из твоего конфига */
+* {
+    border: none;
+    font-family: "FiraCode Nerd Font", "Comfortaa", sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+window.left-bar-window {
+    background-color: transparent;
+}
+
+/* Верхний островок */
+.ags-modules-left {
+    background-color: rgba(17, 17, 27, 0.85);
+    border: 1px solid rgba(137, 180, 250, 0.3);
+    border-radius: 10px;
+    padding: 2px 6px;
+    margin-top: 5px;
+    min-height: 26px;
+    transition: border-radius 0.2s ease;
+
+    /* Когда меню открыто, стираем нижние углы и рамку снизу, чтобы приклеить попап */
+    &.menu-open {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-color: transparent;
+    }
+}
+
+.ags-divider {
+    background-color: rgba(255, 255, 255, 0.15);
+    min-width: 1px;
+    margin: 4px 2px;
+}
+
+.custom-power-btn {
+    color: #cdd6f4;
+    padding: 2px 8px;
+    font-size: 14px;
+    background-color: transparent;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(137, 180, 250, 0.2);
+        color: #89b4fa;
+    }
+}
+
+.workspace-btn {
+    background-color: transparent;
+    color: #cdd6f4;
+    border-radius: 6px;
+    padding: 2px 8px;
+    border: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(137, 180, 250, 0.15);
+    }
+
+    &.active {
+        background-color: #89b4fa;
+        color: #11111b;
+    }
+}
+
+/* Выпадающий блок (попап), который теперь растет прямо из панели */
+.power-popup-box {
+    background-color: rgba(17, 17, 27, 0.85);
+    border: 1px solid rgba(137, 180, 250, 0.3);
+    border-top: none; /* Убираем верхнюю границу, чтобы слиться с баром */
+    border-radius: 0 0 10px 10px;
+    padding: 6px;
+    /* Управляем шириной или выравниванием по ширине снежинки */
+    margin-left: 0px; 
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+.power-item-btn {
+    background-color: transparent;
+    border-radius: 6px;
+    padding: 6px;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.power-shutdown { color: #f38ba8; }
+.power-reboot { color: #f9e2af; }
+.power-suspend { color: #cba6f7; }
+
+.power-shutdown:hover { background-color: rgba(243, 139, 168, 0.2); }
+.power-reboot:hover { background-color: rgba(249, 226, 175, 0.2); }
+.power-suspend:hover { background-color: rgba(203, 166, 247, 0.2); }

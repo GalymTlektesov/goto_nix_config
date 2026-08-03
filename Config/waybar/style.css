@@ -25,7 +25,15 @@ window#waybar {
 }
 
 .modules-left {
-    margin-left: 10px;
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    border-image: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0px;
+    min-height: 0px;
 }
 
 .modules-right {
@@ -85,6 +93,20 @@ window#waybar {
 #language {
     color: #cba6f7;
     margin-right: 15px;
+}
+
+#custom-power {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: #cdd6f4;
+    padding: 0 10px;
+    margin-left: 4px;
+    font-size: 18px;
+}
+
+#custom-power:hover {
+    color: #84D5E0;
+    background-color: rgba(137, 180, 250, 0.15);
+    border-radius: 4px;
 }
 
 @import url("style-launcher.css");

@@ -22,7 +22,6 @@
     	ffmpeg-full
     	cmatrix
     	btop
-    	hollywood
     	cava
     	kdePackages.qtwebsockets
     	kdePackages.qtstyleplugin-kvantum
@@ -48,6 +47,7 @@
     	xfce.tumbler
     	nwg-look
     	figlet
+    	pkgs.nuclear
 
     	#python3 с модулем websockets
     	(python3.withPackages (ps: with ps; [

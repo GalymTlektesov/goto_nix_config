@@ -32,10 +32,19 @@
     mako
     mpvpaper
     swappy
-    ags
     playerctl 
     pamixer
     curl
     libnotify
+    (ags.override {
+      extraPackages = [
+        astal.hyprland
+        # На будущее: если захочешь добавить виджет батареи, сети или звука через Astal,
+        # пакеты добавляются сюда же, например:
+        # astal.battery
+        # astal.network
+        # astal.wireplumber
+      ];
+    })
   ];
 }
