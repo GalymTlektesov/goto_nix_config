@@ -24,33 +24,38 @@ export function LeftModulesBar() {
                 <box 
                     vertical={false}
                     css={bind(powerMenuVisible).as(v => `
-                        background-color: rgba(17, 17, 27, 0.85);
-                        border: 1px solid rgba(137, 180, 250, 0.3);
-                        border-radius: ${v ? "10px 10px 10px 0" : "10px"};
-                        border-bottom-color: ${v ? "transparent" : "rgba(137, 180, 250, 0.3)"};
-                        padding: 2px 6px;
-                        margin-top: 5px;
-                        min-height: 26px;
+                        background-color: rgba(17, 17, 27, 0.75);
+                        border: 1px solid rgba(137, 180, 250, 0.2); 
+                        border-radius: ${v ? "12px 12px 12px 0" : "12px"}; 
+                        border-bottom-color: ${v ? "transparent" : "rgba(137, 180, 250, 0.2)"};
+                        padding: 2px 10px; 
+                        margin-top: 5px; 
+                        min-height: 0;
+                        font-family: 'FiraCode Nerd Font', 'Comfortaa', sans-serif;
+                        font-size: 13px;
+                        font-weight: bold;
                     `)}
                     spacing={2}
+                    valign={Gtk.Align.START}
                 >
                     <button
                         css={`
                             color: #cdd6f4;
-                            padding: 2px 8px;
-                            font-size: 14px;
+                            padding: 0px 6px;
+                            font-size: 18px;
                             background-color: transparent;
                             border: none;
-                            border-radius: 6px;
+                            border-radius: 4px;
+                            min-height: 0;
                         `}
                         onClicked={() => powerMenuVisible.set(!powerMenuVisible.get())}
                     >
                         <label label="󱄅" />
                     </button>
                     
-                    <box css="background-color: rgba(255, 255, 255, 0.15); min-width: 1px; margin: 4px 2px;" />
+                    <box css="background-color: rgba(255, 255, 255, 0.15); min-width: 1px; margin: 4px 4px;" />
 
-                    <box vertical={false} spacing={2}>
+                    <box vertical={false} spacing={2} valign={Gtk.Align.CENTER}>
                         {bind(hypr, "workspaces").as(wss =>
                             wss
                                 .filter(ws => ws.id > 0)
@@ -59,8 +64,8 @@ export function LeftModulesBar() {
                                     <button
                                         css={bind(hypr, "focusedWorkspace").as(fw =>
                                             fw === ws 
-                                                ? "background-color: #89b4fa; color: #11111b; border-radius: 6px; padding: 2px 8px; border: none;" 
-                                                : "background-color: transparent; color: #cdd6f4; border-radius: 6px; padding: 2px 8px; border: none;"
+                                                ? "background-color: #89b4fa; color: #11111b; border-radius: 8px; padding: 0px 8px; border: none; min-height: 0;" 
+                                                : "background-color: transparent; color: #cdd6f4; border-radius: 8px; padding: 0px 8px; border: none; min-height: 0;"
                                         )}
                                         onClicked={() => ws.focus()}
                                     >
@@ -69,9 +74,35 @@ export function LeftModulesBar() {
                                 ))
                         )}
                     </box>
+
+                    <box
+                        vertical={false}
+                        spacing={6}
+                        css="margin-left: 6px; padding-right: 4px;"
+                        visible={bind(hypr, "focusedClient").as(c => c !== null)}
+                        valign={Gtk.Align.CENTER}
+                    >
+                        <label 
+                            label="❯" 
+                            css="color: #6c7086; font-size: 11px;" 
+                        />
+                        {bind(hypr, "focusedClient").as(client => {
+                            if (!client) return <label label="" />;
+                            
+                            return (
+                                <label
+                                    label={bind(client, "title").as(title => {
+                                        const text = title || client.class || "";
+                                        return text.length > 35 ? text.substring(0, 35) + "…" : text;
+                                    })}
+                                    css="color: #b4befe;"
+                                />
+                            );
+                        })}
+                    </box>
                 </box>
 
-                {/* 2. ВЫПАДАЮЩЕЕ МЕНЮ (Суженное) */}
+                {/* 2. ВЫПАДАЮЩЕЕ МЕНЮ (Слитное с панелью) */}
                 <revealer
                     revealChild={bind(powerMenuVisible)}
                     transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
@@ -80,24 +111,28 @@ export function LeftModulesBar() {
                 >
                     <box 
                         vertical={true} 
-                        spacing={4} 
+                        spacing={2} 
                         css={`
-                            background-color: rgba(17, 17, 27, 0.95);
-                            border: 1px solid rgba(137, 180, 250, 0.3);
-                            border-top: none;
-                            border-radius: 0 0 10px 10px;
-                            padding: 6px 5px; /* <-- Уменьшили горизонтальные отступы контейнера */
-                            min-width: 27px;  /* <-- Сузили минимальную ширину */
+                            background-color: rgba(17, 17, 27, 0.75); /* Тот же уровень прозрачности, что у панели */
+                            border: 1px solid rgba(137, 180, 250, 0.2);
+                            border-top: none; /* Убираем верхнюю границу, чтобы слилось с кнопкой */
+                            border-radius: 0 0 12px 12px; /* Скруглены только нижние углы */
+                            padding: 4px; 
+                            min-width: 32px;  
                             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+                            font-family: 'FiraCode Nerd Font', 'Comfortaa', sans-serif;
+                            font-size: 16px;
+                            font-weight: bold;
                         `}
                     >
                         <button
                             css={`
                                 background-color: transparent;
-                                border-radius: 4px;
-                                padding: 5px; /* <-- Уменьшили внутренние отступы самих кнопок */
+                                border-radius: 6px;
+                                padding: 6px; 
                                 border: none;
                                 color: #f38ba8;
+                                min-height: 0;
                             `}
                             onClicked={() => {
                                 exec("systemctl poweroff")
@@ -110,10 +145,11 @@ export function LeftModulesBar() {
                         <button
                             css={`
                                 background-color: transparent;
-                                border-radius: 4px;
-                                padding: 5px;
+                                border-radius: 6px;
+                                padding: 6px; 
                                 border: none;
                                 color: #f9e2af;
+                                min-height: 0;
                             `}
                             onClicked={() => {
                                 exec("systemctl reboot")
@@ -126,10 +162,11 @@ export function LeftModulesBar() {
                         <button
                             css={`
                                 background-color: transparent;
-                                border-radius: 4px;
-                                padding: 5px;
+                                border-radius: 6px;
+                                padding: 6px; 
                                 border: none;
                                 color: #cba6f7;
+                                min-height: 0;
                             `}
                             onClicked={() => {
                                 exec("systemctl suspend")
@@ -141,7 +178,6 @@ export function LeftModulesBar() {
                         </button>
                     </box>
                 </revealer>
-
             </box>
         </window>
     )
