@@ -9,17 +9,31 @@
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs"; # Чтобы он использовал те же пакеты, что и система
     };
+
+    gslapper = {
+      url = "github:Nomadcxx/gSlapper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, aagl, ... }@inputs: {
+  outputs = { self, nixpkgs, aagl, gslapper, ... }@inputs: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./hardware-configuration.nix
           ./configuration.nix
+          ./modules/packages.nix
           # Подключаем модуль AAGL прямо здесь, на уровне флейка
           aagl.nixosModules.default
+
+          ({ pkgs, ... }: {
+            nixpkgs.overlays = [
+              (final: prev: {
+                gslapper = gslapper.packages.${pkgs.system}.default;
+              })
+            ];
+          })
         ];
       };
     };

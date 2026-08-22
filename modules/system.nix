@@ -54,6 +54,8 @@
     	packages = with pkgs; [kdePackages.kate];
   	};
 
+    programs.dconf.enable = true;
+
   	users.defaultUserShell = pkgs.zsh;
 
   	# Настраеваем ZSH

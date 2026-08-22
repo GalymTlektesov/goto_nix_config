@@ -64,8 +64,9 @@ export function LeftModulesBar() {
                                     <button
                                         css={bind(hypr, "focusedWorkspace").as(fw =>
                                             fw === ws 
-                                                ? "background-color: #89b4fa; color: #11111b; border-radius: 8px; padding: 0px 8px; border: none; min-height: 0;" 
-                                                : "background-color: transparent; color: #cdd6f4; border-radius: 8px; padding: 0px 8px; border: none; min-height: 0;"
+                                                // Прописали шрифты прямо сюда
+                                                ? "font-family: 'FiraCode Nerd Font', 'Comfortaa', sans-serif; font-weight: bold; font-size: 13px; background-color: #89b4fa; color: #11111b; border-radius: 8px; padding: 0px 8px; border: none; min-height: 0;" 
+                                                : "font-family: 'FiraCode Nerd Font', 'Comfortaa', sans-serif; font-weight: bold; font-size: 13px; background-color: transparent; color: #cdd6f4; border-radius: 8px; padding: 0px 8px; border: none; min-height: 0;"
                                         )}
                                         onClicked={() => ws.focus()}
                                     >
@@ -84,7 +85,8 @@ export function LeftModulesBar() {
                     >
                         <label 
                             label="❯" 
-                            css="color: #6c7086; font-size: 11px;" 
+                            // И сюда
+                            css="font-family: 'FiraCode Nerd Font', 'Comfortaa', sans-serif; font-weight: bold; font-size: 11px; color: #6c7086;" 
                         />
                         {bind(hypr, "focusedClient").as(client => {
                             if (!client) return <label label="" />;
@@ -95,7 +97,8 @@ export function LeftModulesBar() {
                                         const text = title || client.class || "";
                                         return text.length > 35 ? text.substring(0, 35) + "…" : text;
                                     })}
-                                    css="color: #b4befe;"
+                                    // И для названия окна
+                                    css="font-family: 'FiraCode Nerd Font', 'Comfortaa', sans-serif; font-weight: bold; font-size: 13px; color: #b4befe;"
                                 />
                             );
                         })}
@@ -113,23 +116,23 @@ export function LeftModulesBar() {
                         vertical={true} 
                         spacing={2} 
                         css={`
-                            background-color: rgba(17, 17, 27, 0.75); /* Тот же уровень прозрачности, что у панели */
+                            background-color: rgba(17, 17, 27, 0.75);
                             border: 1px solid rgba(137, 180, 250, 0.2);
-                            border-top: none; /* Убираем верхнюю границу, чтобы слилось с кнопкой */
-                            border-radius: 0 0 12px 12px; /* Скруглены только нижние углы */
+                            border-top: none;
+                            border-radius: 0 0 16px 16px;
                             padding: 4px; 
                             min-width: 32px;  
-                            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+                            box-shadow: 0 14px 16px rgba(0, 0, 0, 0.4);
                             font-family: 'FiraCode Nerd Font', 'Comfortaa', sans-serif;
-                            font-size: 16px;
+                            font-size: 18px;
                             font-weight: bold;
                         `}
                     >
                         <button
                             css={`
                                 background-color: transparent;
-                                border-radius: 6px;
-                                padding: 6px; 
+                                border-radius: 9px;
+                                padding: 9px; 
                                 border: none;
                                 color: #f38ba8;
                                 min-height: 0;
@@ -145,8 +148,8 @@ export function LeftModulesBar() {
                         <button
                             css={`
                                 background-color: transparent;
-                                border-radius: 6px;
-                                padding: 6px; 
+                                border-radius: 9px;
+                                padding: 9px; 
                                 border: none;
                                 color: #f9e2af;
                                 min-height: 0;
@@ -162,8 +165,8 @@ export function LeftModulesBar() {
                         <button
                             css={`
                                 background-color: transparent;
-                                border-radius: 6px;
-                                padding: 6px; 
+                                border-radius: 9px;
+                                padding: 9px; 
                                 border: none;
                                 color: #cba6f7;
                                 min-height: 0;

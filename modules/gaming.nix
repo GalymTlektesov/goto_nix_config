@@ -3,9 +3,6 @@
     programs.honkers-railway-launcher.enable = true; # hsr
   	programs.sleepy-launcher.enable = true; # zzz
 
-    # Включение Wavey Launcher для Wuthering Waves
-    programs.wavey-launcher.enable = true;
-
   	# Включаем GameMode
   	programs.gamemode.enable = true;
 

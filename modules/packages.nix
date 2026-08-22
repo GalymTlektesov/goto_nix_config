@@ -12,28 +12,25 @@
 
   	# Список программ для ВСЕХ пользователей системы
   	environment.systemPackages = with pkgs; [
-    	vesktop 
-    	krita 
+    	vesktop
+    	krita
     	fastfetch
     	git
     	brightnessctl
     	evtest
     	vlc
     	ffmpeg-full
-    	cmatrix
     	btop
     	cava
     	kdePackages.qtwebsockets
     	kdePackages.qtstyleplugin-kvantum
-    	obsidian 
-    	foliate
+    	obsidian
     	obs-studio
     	sublime4
     	kdePackages.kdenlive
     	pkgs.yandex-music
     	pkgs.godot
     	pkgs.blender
-    	pkgs.unityhub
     	pkgs.docker
     	pkgs.jetbrains.pycharm
     	pkgs.vscode
@@ -42,18 +39,31 @@
     	pkgs.onlyoffice-desktopeditors
     	pkgs.nvtopPackages.nvidia
     	oh-my-posh
-    	lavat
     	xfce.thunar
     	xfce.tumbler
     	nwg-look
+    	pkgs.sweet
     	figlet
     	pkgs.nuclear
+    	gnome-calculator
+    	glib
+    	gsettings-desktop-schemas
+    	baobab
+    	gslapper
 
     	#python3 с модулем websockets
     	(python3.withPackages (ps: with ps; [
       		websockets
     	]))
   	];
+
+  	fonts.packages = with pkgs; [
+  		nerd-fonts.jetbrains-mono
+  		nerd-fonts.fira-code
+  		nerd-fonts.hack
+  		nerd-fonts.iosevka
+	];
+
 
   	#Kvantum для Qt
   	qt = {

@@ -16,18 +16,21 @@ window#waybar {
 }
 
 /* Наша идеальная скругленная панель */
+/* Наша идеальная скругленная панель */
 #waybar.left .modules-left {
-    background-color: rgba(30, 30, 46, 0.75);
+    /* Делаем фон значительно более прозрачным */
+    background-color: rgba(30, 30, 46, 0.35); 
     
-    /* Вместо ломающих скосов делаем чистое глубокое скругление правой грани к окнам */
+    /* Скругление правой грани */
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     
-    /* Тонкий красивый кант справа, который подчеркнет дугу дока */
+    /* Деликатная мягкая граница */
     border-right: 2px solid rgba(203, 166, 247, 0.3);
 
+    /* Уменьшаем внутренние отступы */
     padding: 15px 6px;
     margin: 0;
 }
@@ -35,28 +38,29 @@ window#waybar {
 /* Стили для всех значков приложений */
 #waybar.left #custom-terminal, #waybar.left #custom-browser, #waybar.left #custom-files, #waybar.left #custom-telegram, 
 #waybar.left #custom-vesktop, #waybar.left #custom-steam, #waybar.left #custom-anime, 
-#waybar.left #custom-sleepy, #waybar.left #custom-factorio, #waybar.left #custom-warhammer, 
-#waybar.left #custom-aoe4, #waybar.left #custom-tlauncher, #waybar.left #custom-battlenet, 
+#waybar.left #custom-sleepy, #waybar.left #custom-factorio, #waybar.left #custom-obsidian, 
+#waybar.left #custom-aoe4, #waybar.left #custom-lutris, #waybar.left #custom-battlenet, 
 #waybar.left #custom-obs {
-    font-size: 22px;
+    font-size: 22px; /* Уменьшен размер иконок (был 22px) */
     color: #cdd6f4;
-    background-color: rgba(45, 45, 70, 0.4);
-    padding: 10px;
+    background-color: transparent; /* Убран плотный фон у каждой иконки */
+    padding: 10px; /* Уменьшены отступы (были 10px) */
     margin: 5px 0;
     border-radius: 12px;
+    font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", sans-serif;
+    transition: all 0.2s ease; /* Плавность при наведении */
 }
 
-/* Фиолетовая неоновая подсветка */
+/* Зеленая неоновая подсветка */
 #waybar.left #custom-terminal:hover, #waybar.left #custom-browser:hover, #waybar.left #custom-files:hover, #waybar.left #custom-telegram:hover, 
 #waybar.left #custom-vesktop:hover, #waybar.left #custom-steam:hover, #waybar.left #custom-anime:hover, 
-#waybar.left #custom-sleepy:hover, #waybar.left #custom-factorio:hover, #waybar.left #custom-warhammer:hover, 
-#waybar.left #custom-aoe4:hover, #waybar.left #custom-tlauncher:hover, #waybar.left #custom-battlenet:hover, 
+#waybar.left #custom-sleepy:hover, #waybar.left #custom-factorio:hover, #waybar.left #custom-obsidian:hover, 
+#waybar.left #custom-aoe4:hover, #waybar.left #custom-lutris:hover, 
 #waybar.left #custom-obs:hover {
-    background-color: #cba6f7;
+    background-color: #7B6EEB;
     color: #11111b;
-    box-shadow: 0 0 10px #cba6f7;
+    box-shadow: 0 0 10px #7B6EEB;
 }
-
 
 /* Выжигаем дефолтные рамки и фоны пустых контейнеров левого бара */
 window#waybar.left .modules-center,

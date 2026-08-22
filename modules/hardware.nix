@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
   	# --- НАСТРОЙКИ ЗВУКА И AUDIO ---
@@ -32,7 +32,11 @@
     	package = config.boot.kernelPackages.nvidiaPackages.stable;
   	};
 
-	# Интеграция драйверов Nvidia в аппаратное ускорение программ
-	hardware.graphics.enable = true;
-	hardware.graphics.enable32Bit = true;
+	hardware.graphics = {
+  		enable = true;
+  		enable32Bit = true;
+  		extraPackages = with pkgs; [
+    		nvidia-vaapi-driver
+  		];
+  	};
 }

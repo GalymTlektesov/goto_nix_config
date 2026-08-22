@@ -48,3 +48,16 @@ window {
 #text {
     margin: 0px 5px;
 }
+
+
+/* Переопределение системной темы GTK для выбранного элемента */
+#entry:selected #text,
+#entry:selected #img {
+    background-color: transparent;
+}
+
+/* Принудительное отключение выделения текста GTK */
+#text:selected {
+    background-color: transparent;
+    color: inherit;
+}

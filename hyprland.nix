@@ -36,6 +36,8 @@
     pamixer
     curl
     libnotify
+    pwvucontrol
+
     (ags.override {
       extraPackages = [
         astal.hyprland
