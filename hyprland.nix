@@ -28,9 +28,8 @@
     grim  # <-- ДЛЯ СКРИНШОТОВ
     slurp # <-- ДЛЯ ВЫБОРА ОБЛАСТИ МЫШКОЙ
     wl-clipboard
-    swww
+    awww
     mako
-    mpvpaper
     swappy
     playerctl 
     pamixer
@@ -41,11 +40,13 @@
     (ags.override {
       extraPackages = [
         astal.hyprland
+        astal.wireplumber
+        astal.tray
+        astal.io
         # На будущее: если захочешь добавить виджет батареи, сети или звука через Astal,
         # пакеты добавляются сюда же, например:
         # astal.battery
         # astal.network
-        # astal.wireplumber
       ];
     })
   ];

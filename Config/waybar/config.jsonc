@@ -9,7 +9,7 @@
     "modules-left": [],
     //"modules-left": ["custom/power",  "hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["cpu", "memory", "pulseaudio", "hyprland/language", "network", "tray"],
+    //"modules-right": ["cpu", "memory", "pulseaudio", "hyprland/language", "network", "tray"],
 
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -24,13 +24,9 @@
         "max-length": 40
     },
 
-    "tray": {
-        "icon-size": 16,
-        "spacing": 10
-    },
-
     "clock": {
-        "format": "󱎫  {:%H:%M  |  %A, %b %d}",
+        "interval": 1,
+        "format": "󱎫  {:%H:%M:%S  |  %A, %b %d}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
 
@@ -49,11 +45,11 @@
 
     "pulseaudio": {
         "format": "{icon}  {volume}%",
-        "format-muted": "   Muted",
+        "format-muted": "    Muted",
         "format-icons": {
             "default": [" ", " ", " "]
         },
-        "on-click": "pavucontrol"
+        "on-click": "ags toggle volume_menu"
     },
 
     "network": {

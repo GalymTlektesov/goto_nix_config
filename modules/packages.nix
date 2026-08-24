@@ -39,8 +39,8 @@
     	pkgs.onlyoffice-desktopeditors
     	pkgs.nvtopPackages.nvidia
     	oh-my-posh
-    	xfce.thunar
-    	xfce.tumbler
+    	pkgs.thunar
+    	pkgs.tumbler
     	nwg-look
     	pkgs.sweet
     	figlet
