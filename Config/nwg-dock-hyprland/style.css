@@ -1,0 +1,50 @@
+window,
+window#nwg-dock,
+#dock-box {
+    background-color: transparent;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Ширина и формы основного островка */
+#box {
+    background-color: rgba(30, 30, 46, 0.35);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-right: 2px solid rgba(203, 166, 247, 0.3);
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+
+    /* Отступы как в вашей секции .modules-left (15px top/bottom, 6px left/right) */
+    padding: 15px 6px;
+    margin: 0;
+}
+
+/* Кнопки иконок */
+button {
+    background-color: transparent;
+    border: none;
+    border-radius: 12px;
+    /* Увеличенные отступы у кнопок (10px padding, 5px margin) */
+    padding: 10px;
+    margin: 5px 0;
+    box-shadow: none;
+    transition: all 0.2s ease;
+}
+
+/* Ховер с фиолетовой подсветкой */
+button:hover {
+    background-color: #7B6EEB;
+    box-shadow: 0 0 10px #7B6EEB;
+}
+
+/* Активные/запущенные */
+button:checked {
+    background-color: rgba(123, 110, 235, 0.25);
+}

@@ -7,7 +7,7 @@ pkill -9 waybar
 sleep 0.2
 
 # Запускаем верхнюю панель в фоне
-waybar >/dev/null 2>&1 &
+#waybar >/dev/null 2>&1 &
 
 # Запускаем левую панель (док) в фоне
 waybar -c ~/.config/waybar/config-launcher.jsonc >/dev/null 2>&1 &

@@ -36,6 +36,7 @@
     curl
     libnotify
     pwvucontrol
+    gslapper
 
     (ags.override {
       extraPackages = [

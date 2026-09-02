@@ -4,14 +4,16 @@ import Bar, { CalendarWidget } from "./widget/Bar" // Импортируем и 
 import { PowerMenu, LeftModulesBar } from './widget/powermenu';
 //import VolumeMenu from './widget/volumemenu';
 import RightBar from "./widget/RightBar"
+import CenterBar from "./widget/CenterBar"
 
 App.start({
     css: style,
     main() {
         LeftModulesBar()
+        CenterBar()
         App.get_monitors().map(monitor => {
             Bar(monitor)
-            CalendarWidget(monitor)
+            //CalendarWidget(monitor)
             RightBar(monitor)
         })
         //App.add_window(VolumeMenu())

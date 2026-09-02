@@ -8,7 +8,7 @@
     "height": 34,
     "modules-left": [],
     //"modules-left": ["custom/power",  "hyprland/workspaces", "hyprland/window"],
-    "modules-center": ["clock"],
+    //"modules-center": ["clock"],
     //"modules-right": ["cpu", "memory", "pulseaudio", "hyprland/language", "network", "tray"],
 
     "hyprland/workspaces": {

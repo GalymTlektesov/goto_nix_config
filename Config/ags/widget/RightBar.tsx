@@ -9,8 +9,8 @@ const css = `
     .right-bar-card {
         background-color: rgba(17, 17, 27, 0.75);
         border: 1px solid rgba(137, 180, 250, 0.2);
-        border-radius: 20px;
-        padding: 4px 20px;
+        border-radius: 25px;
+        padding: 5px 25px;
     }
     .cpu-label { color: #f38ba8; font-weight: bold; }
     .memory-btn { color: #fab387; font-weight: bold; background: transparent; border: none; padding: 0; box-shadow: none; }
@@ -20,7 +20,6 @@ const css = `
     .audio-btn:hover { background-color: rgba(166, 227, 161, 0.15); border-radius: 6px; }
     .lang-label { color: #cba6f7; font-weight: bold; }
     .net-label { color: #94e2d5; font-weight: bold; }
-
     .embedded-slider { min-height: 0; padding: 0; margin: 0; }
     .embedded-slider trough {
         min-height: 4px; border-radius: 2px; background-color: rgba(255, 255, 255, 0.15);
@@ -30,8 +29,8 @@ const css = `
     }
     .embedded-slider slider {
         min-width: 8px; min-height: 8px; background-color: #a6e3a1; border-radius: 50%; margin: -2px;
-    }
-    
+    }  
+
     .tray-item { background: transparent; border: none; padding: 0 4px; }
     .tray-item icon { min-width: 16px; min-height: 16px; }
 `
@@ -45,7 +44,6 @@ export default function RightBar(monitor: Gdk.Monitor) {
     const speaker = audio?.default_speaker
     const tray = Tray.get_default()
     const hyprland = Hyprland.get_default()
-
     const showSlider = Variable(false)
 
     const cpu = Variable("0").poll(10000, ["bash", "-c", "top -bn1 | grep 'Cpu(s)' | awk '{print int(100 - $8)}'"])
@@ -55,11 +53,12 @@ export default function RightBar(monitor: Gdk.Monitor) {
     const memPercent = Variable("0%").poll(30000, ["bash", "-c", "free -m | awk '/Mem:/ {printf \"%.0f%%\", $3/$2*100}'"])
         const memLabel = Variable.derive(
         [bind(memAlt), bind(memGigs), bind(memPercent)],
-        (alt, gigs, percent) => alt ? `  ${percent}` : `  ${gigs}`
+        (alt, gigs, percent) => alt ? `   ${percent}` : `   ${gigs}`
     )
 
     const net = Variable("Disconnected").poll(5000, ["bash", "-c", "ip route get 1.1.1.1 2>/dev/null | awk '{print $7}' || echo 'Disconnected'"])
-    
+ 
+
     const lang = Variable("EN")
     const updateLang = () => {
         execAsync(["bash", "-c", "hyprctl devices | grep 'active keymap:' | head -n 1 | awk '{print $3}' | cut -c 1-2 | tr 'a-z' 'A-Z'"])
@@ -76,23 +75,19 @@ export default function RightBar(monitor: Gdk.Monitor) {
             gdkmonitor={monitor}
             exclusivity={Astal.Exclusivity.EXCLUSIVE}
             anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
-            marginTop={-30} 
+            marginTop={-28} 
             marginRight={10}
         >
             <box className="right-bar-card" spacing={12} valignment={Gtk.Align.CENTER}>
-                
-                <label className="cpu-label" label={bind(cpu).as(v => `  ${v}%`)} />
-
+                <label className="cpu-label" label={bind(cpu).as(v => `   ${v}%`)} />
                 <button className="memory-btn" onClicked={() => memAlt.set(!memAlt.get())}>
                     <label label={bind(memLabel)} />
                 </button>
-
                 <box spacing={6} valignment={Gtk.Align.CENTER}>
                     {/* Исправленный eventbox со стабильным скроллом в обе стороны */}
                     <eventbox onScrollEvent={(self, event) => {
                         if (!speaker) return
                         const [hasDirection, dir] = event.get_scroll_direction()
-
                         if (hasDirection && dir !== Gdk.ScrollDirection.SMOOTH) {
                             if (dir === Gdk.ScrollDirection.UP) {
                                 speaker.volume = Math.min(1, speaker.volume + 0.05)
@@ -116,12 +111,12 @@ export default function RightBar(monitor: Gdk.Monitor) {
                             <label label={speaker ? bind(speaker, "volume").as(v => {
                                 const vol = Math.round(v * 100)
                                 if (speaker.mute || vol === 0) return "   Muted"
-                                const icon = vol > 50 ? " " : vol > 20 ? " " : " "
+                                const icon = vol > 50 ? "  " : vol > 20 ? " " : " "
                                 return `${icon} ${vol}%`
                             }) : "   Muted"} />
                         </button>
                     </eventbox>
-                    
+
                     <box visible={bind(showSlider)} valignment={Gtk.Align.CENTER}>
                         {speaker && (
                             <slider
@@ -168,4 +163,4 @@ export default function RightBar(monitor: Gdk.Monitor) {
             </box>
         </window>
     )
-}
+} 

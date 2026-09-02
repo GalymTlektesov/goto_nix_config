@@ -24,6 +24,18 @@ window#waybar {
     margin-top: 5px;
 }
 
+.modules-center {
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    border-image: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0px;
+    min-height: 0px;
+}
+
 .modules-left {
     background: transparent;
     background-color: transparent;

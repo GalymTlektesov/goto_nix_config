@@ -31,9 +31,7 @@
     	pkgs.yandex-music
     	pkgs.godot
     	pkgs.blender
-    	pkgs.docker
     	pkgs.jetbrains.pycharm
-    	pkgs.vscode
     	lutris
     	temurin-bin
     	pkgs.onlyoffice-desktopeditors
@@ -49,7 +47,13 @@
     	glib
     	gsettings-desktop-schemas
     	baobab
-    	gslapper
+    	foliate
+    	lavat
+    	cmatrix
+    	nwg-dock-hyprland
+    	zed-editor
+
+    	quickshell
 
     	#python3 с модулем websockets
     	(python3.withPackages (ps: with ps; [

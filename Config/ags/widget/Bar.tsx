@@ -38,14 +38,18 @@ export default function Bar(monitor: Gdk.Monitor) {
     return <window
         monitor={monitor}
         name="equalizer-widget"
-        namespace="ags-bar"
+        namespace="ags-equalizer"
         anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
         exclusivity={Astal.Exclusivity.IGNORE}
         layer={Astal.Layer.BOTTOM}
-        marginTop={45}
-        marginRight={35}
+        marginTop={720}
+        marginRight={-45}
         visible={true}
-        css="background-color: rgba(26, 27, 38, 0.85); border-radius: 22px; border: 1px solid rgba(122, 162, 247, 0.2);"
+        //css="background-color: rgba(26, 27, 38, 0.85); border-radius: 22px; border: 1px solid rgba(122, 162, 247, 0.2);"
+        css="background-color: transparent; 
+        border-radius: 22px; border: 1px solid rgba(122, 162, 247, 0.2);
+        border: none;"
+        //css="background-color: transparent; border: none;"
     >
         <box 
             vertical={true} 
@@ -56,7 +60,7 @@ export default function Bar(monitor: Gdk.Monitor) {
         >
             <label 
                 label={bind(currentTrack)} 
-                halign={Gtk.Align.START} 
+                halign={Gtk.Align.CENTER} 
                 truncate={true}
                 maxWidthChars={32}
                 css="color: #7aa2f7; font-weight: bold; font-size: 13px;" 
@@ -107,135 +111,5 @@ export default function Bar(monitor: Gdk.Monitor) {
                 </button>
             </box>
         </box>
-    </window>
-}
-
-//Календарь
-
-const timeVar = Variable(new Date()).poll(60000, () => new Date())
-const monthOffset = Variable(0) // 0 - текущий месяц, -1 - прошлый, +1 - следующий
-
-// Объединяем переменные, чтобы календарь обновлялся и от времени, и от скролла
-const calendarState = Variable.derive([timeVar, monthOffset], (time, offset) => ({ time, offset }))
-
-export function CalendarWidget(monitor: Gdk.Monitor) {
-    const dayNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-    const monthNames = [
-        "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-    ]
-
-    return <window
-        monitor={monitor}
-        name="calendar-widget"
-        namespace="ags-bar" 
-        anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
-        exclusivity={Astal.Exclusivity.IGNORE}
-        layer={Astal.Layer.BOTTOM}
-        marginTop={245} // Сдвинул ниже, так как эквалайзер стал чуть выше. Подкорректируй при необходимости.
-        marginRight={35}
-        visible={true}
-        css="background-color: transparent;" 
-    >
-        {/* EVENTBOX для отслеживания скролла */}
-        <eventbox 
-            onScrollEvent={(_, event) => {
-                const [hasDirection, dir] = event.get_scroll_direction()
-                if (hasDirection) {
-                    if (dir === Gdk.ScrollDirection.UP) monthOffset.set(monthOffset.get() - 1)
-                    else if (dir === Gdk.ScrollDirection.DOWN) monthOffset.set(monthOffset.get() + 1)
-                } else {
-                    const [hasDeltas, dx, dy] = event.get_scroll_deltas()
-                    if (hasDeltas) {
-                        if (dy < 0) monthOffset.set(monthOffset.get() - 1)
-                        else if (dy > 0) monthOffset.set(monthOffset.get() + 1)
-                    }
-                }
-                return true
-            }}
-        >
-            <box 
-                vertical 
-                widthRequest={340}
-                css="background-color: rgba(26, 27, 38, 0.85); border-radius: 22px; border: 1px solid rgba(122, 162, 247, 0.2); padding: 16px;"
-            >
-                {bind(calendarState).as(({ time, offset }) => {
-                    const realYear = time.getFullYear()
-                    const realMonth = time.getMonth()
-                    
-                    // JS Date автоматически решает переход через год, если передать month + offset
-                    const targetDate = new Date(realYear, realMonth + offset, 1)
-                    const year = targetDate.getFullYear()
-                    const month = targetDate.getMonth()
-                    
-                    const jsDay = targetDate.getDay()
-                    const firstDayIndex = jsDay === 0 ? 6 : jsDay - 1
-                    const totalDays = new Date(year, month + 1, 0).getDate()
-                    
-                    const isCurrentMonth = offset === 0
-                    const currentDay = time.getDate() 
-
-                    const daysArray = []
-                    
-                    for (let i = 0; i < firstDayIndex; i++) {
-                        daysArray.push(<label css="min-height: 36px; min-width: 36px;" label="" />)
-                    }
-                    
-                    for (let day = 1; day <= totalDays; day++) {
-                        const isToday = isCurrentMonth && (day === currentDay)
-                        
-                        const dayCss = isToday 
-                            ? "color: #1a1b26; background-color: #7aa2f7; font-weight: bold; font-size: 13px; border-radius: 8px; min-height: 36px; min-width: 36px;" 
-                            : "color: #c0caf5; font-weight: bold; font-size: 13px; border-radius: 8px; min-height: 36px; min-width: 36px;"
-                        
-                        daysArray.push(
-                            <label 
-                                css={dayCss} 
-                                label={String(day)} 
-                                halign={Gtk.Align.CENTER}
-                                valign={Gtk.Align.CENTER}
-                            />
-                        )
-                    }
-
-                    while (daysArray.length % 7 !== 0) {
-                        daysArray.push(<label css="min-height: 36px;" label="" />)
-                    }
-
-                    const weeks = []
-                    for (let i = 0; i < daysArray.length; i += 7) {
-                        weeks.push(daysArray.slice(i, i + 7))
-                    }
-
-                    return (
-                        <box vertical>
-                            {/* Нажатие на месяц сбрасывает календарь на текущую дату */}
-                            <button 
-                                onClicked={() => monthOffset.set(0)} 
-                                css="background: transparent; border: none; padding: 0;"
-                                halign={Gtk.Align.START}
-                            >
-                                <label 
-                                    css="color: #7dcfff; font-weight: bold; font-size: 14px; margin-bottom: 12px; margin-left: 6px;" 
-                                    label={`${monthNames[month]} ${year}`} 
-                                />
-                            </button>
-                            <box homogeneous css="margin-bottom: 8px;">
-                                {dayNames.map(name => (
-                                    <label css="color: #bb9af7; font-weight: bold; font-size: 13px;" label={name} halign={Gtk.Align.CENTER} />
-                                ))}
-                            </box>
-                            <box vertical spacing={6}>
-                                {weeks.map(week => (
-                                    <box homogeneous spacing={6}>
-                                        {week}
-                                    </box>
-                                ))}
-                            </box>
-                        </box>
-                    )
-                })}
-            </box>
-        </eventbox>
     </window>
 }
