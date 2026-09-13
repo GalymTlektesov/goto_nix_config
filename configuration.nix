@@ -16,6 +16,8 @@
     ];
     aagl.enableNixpkgsReleaseBranchCheck = false;
 
+
+
     # Bootloader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
@@ -27,6 +29,8 @@
     # Переключаем систему на оптимизированное ядро
     #boot.kernelPackages = pkgs.linuxPackages_xanmod;
     boot.kernelPackages = pkgs.linuxPackages_zen;
+    # CachyOS kernel + BORE scheduler
+    #boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore;
 
     # Install firefox.
     programs.firefox.enable = true;
@@ -37,6 +41,7 @@
         obs-studio = super.obs-studio.override { cudaSupport = true; };
       })
     ];
+    
     # Разрешаем сборщику использовать старый openssl ради CUDA в OBS
     nixpkgs.config.permittedInsecurePackages = [
       "openssl-1.1.1w"

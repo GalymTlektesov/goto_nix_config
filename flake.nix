@@ -14,23 +14,39 @@
       url = "github:Nomadcxx/gSlapper";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    serpantinum.url = "github:ilyamiro/serpantinum";
   };
 
-  outputs = { self, nixpkgs, aagl, gslapper, ... }@inputs: {
+  outputs = { self, nixpkgs, aagl, gslapper, caelestia-shell, serpantinum, ... }@inputs: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = { inherit serpantinum; inherit inputs; };
         modules = [
           ./hardware-configuration.nix
           ./configuration.nix
           ./modules/packages.nix
           # Подключаем модуль AAGL прямо здесь, на уровне флейка
           aagl.nixosModules.default
+          serpantinum.nixosModules.default
 
           ({ pkgs, ... }: {
             nixpkgs.overlays = [
+              
               (final: prev: {
                 gslapper = gslapper.packages.${pkgs.system}.default;
+                caelestia-shell = caelestia-shell.packages.${prev.system}.with-cli;
               })
             ];
           })

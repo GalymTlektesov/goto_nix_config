@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, serpantinum, inputs, ... }:
 
 {
 	# Allow unfree packages - Разрешить проприетарный софт
@@ -52,20 +52,38 @@
     	cmatrix
     	nwg-dock-hyprland
     	zed-editor
+    	inputs.zen-browser.packages.${pkgs.system}.default
 
     	quickshell
+    	qt6.qtdeclarative
+  		qt6.qt5compat
+  		qt6.qtsvg
+  		qt6.qtpositioning
+  		qt6.qtwebengine
+  		kdePackages.kirigami
+  		kdePackages.syntax-highlighting
+
+  		papirus-icon-theme
 
     	#python3 с модулем websockets
     	(python3.withPackages (ps: with ps; [
       		websockets
     	]))
+
+
+    	caelestia-shell
+
+    	serpantinum.packages.${pkgs.stdenv.hostPlatform.system}.default
   	];
+
+  	programs.serpantinum.enable = true;
 
   	fonts.packages = with pkgs; [
   		nerd-fonts.jetbrains-mono
   		nerd-fonts.fira-code
   		nerd-fonts.hack
   		nerd-fonts.iosevka
+  		material-symbols
 	];
 
 
@@ -76,12 +94,16 @@
   	};
 
   	services.flatpak.enable = true;
-  	virtualisation.waydroid.enable = true;
 
   	environment.sessionVariables = {
     	QML2_IMPORT_PATH = [
       		"${pkgs.kdePackages.qtwebsockets}/lib/qt-6/qml"
       		"${pkgs.kdePackages.qtwebsockets}/share/qt-6/qml"
     	];
-	};
+    	__GL_SHADER_DISK_CACHE = "1";
+  		__GL_SHADER_DISK_CACHE_SKIP_CLEANUP = "1";
+  		__GL_SHADER_DISK_CACHE_SIZE = "10737418240"; # 10 Гб
+  		__GL_SHADER_DISK_CACHE_PATH = "/home/YOUR_USER/.cache/nv_shaders";
+  		DXVK_STATE_CACHE_PATH = "/home/YOUR_USER/.cache/dxvk";	
+  	};
 }
