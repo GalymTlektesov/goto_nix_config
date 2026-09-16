@@ -9,13 +9,13 @@ import CenterBar from "./widget/CenterBar"
 App.start({
     css: style,
     main() {
-        LeftModulesBar()
-        CenterBar()
         App.get_monitors().map(monitor => {
             Bar(monitor)
             //CalendarWidget(monitor)
             RightBar(monitor)
         })
+        LeftModulesBar()
+        CenterBar()
         //App.add_window(VolumeMenu())
     },
 })

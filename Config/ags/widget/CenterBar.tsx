@@ -1,8 +1,44 @@
 import { Astal, Gtk, Gdk } from "astal/gtk3"
 import { Variable, bind } from "astal"
+import { execAsync } from "astal/process"
 import GdkPixbuf from "gi://GdkPixbuf"
 import GLib from "gi://GLib"
 
+// --- Блок погоды ---
+// Координаты для запроса (по умолчанию Астана: 51.1694, 71.4491)
+const CITY_LAT = "51.1694"
+const CITY_LON = "71.4491"
+
+function getWeatherIcon(code: number): string {
+    if (code === 0) return "󰖙" // Ясно
+    if (code >= 1 && code <= 3) return "󰖕" // Переменная облачность
+    if (code >= 45 && code <= 48) return "󰌵" // Туман
+    if (code >= 51 && code <= 67) return "󰖖" // Морось / Дождь
+    if (code >= 71 && code <= 77) return "󰼁" // Снег
+    if (code >= 80 && code <= 82) return "󰙾" // Ливень
+    if (code >= 85 && code <= 86) return "󰼁" // Снегопад
+    if (code >= 95 && code <= 99) return "󰙾" // Гроза
+    return "󰖔"
+}
+
+const weatherData = Variable({ temp: "--°C", icon: "󰖔" }).poll(900000, async () => {
+    try {
+        const res = await execAsync(
+            `curl -s "https://api.open-meteo.com/v1/forecast?latitude=${CITY_LAT}&longitude=${CITY_LON}&current_weather=true"`
+        )
+        const json = JSON.parse(res)
+        const current = json.current_weather
+        return {
+            temp: `${Math.round(current.temperature)}°C`,
+            icon: getWeatherIcon(current.weathercode)
+        }
+    } catch (e) {
+        console.error("Ошибка получения погоды:", e)
+        return { temp: "--°C", icon: "󰖔" }
+    }
+})
+
+// --- Блок времени и календаря ---
 const time = Variable(new Date()).poll(1000, () => new Date())
 const showCalendar = Variable(false)
 const monthOffset = Variable(0)
@@ -148,21 +184,39 @@ export default function CenterBar(monitor: Gdk.Monitor) {
                 halign={Gtk.Align.CENTER}
                 css="background-color: rgba(26, 27, 38, 0.85); border-radius: 16px; border: 1px solid rgba(122, 162, 247, 0.2); padding: 5px 14px;"
             >
-                {/* Кнопка часов и даты */}
+                {/* Кнопка с часами, датой и погодой */}
                 <button
                     onClicked={() => showCalendar.set(!showCalendar.get())}
                     css="background: transparent; border: none; padding: 0; margin: 0;"
                 >
                     <box spacing={10} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
+                        {/* Часы */}
                         <label label="" css="color: #7dcfff; font-size: 13px;" />
                         <label 
                             label={bind(time).as(formatTime)} 
                             css="color: #c0caf5; font-weight: bold; font-size: 13px; font-family: 'JetBrains Mono', monospace;" 
                         />
+                        
+                        {/* Разделитель */}
                         <label label="|" css="color: rgba(190, 203, 247, 0.3); font-size: 13px;" />
+                        
+                        {/* Дата */}
                         <label 
                             label={bind(time).as(formatDate)} 
                             css="color: #c0caf5; font-weight: bold; font-size: 13px;" 
+                        />
+
+                        {/* Разделитель */}
+                        <label label="|" css="color: rgba(190, 203, 247, 0.3); font-size: 13px;" />
+
+                        {/* Погода справа */}
+                        <label 
+                            label={bind(weatherData).as(w => w.icon)} 
+                            css="color: #e0af68; font-size: 14px;" 
+                        />
+                        <label 
+                            label={bind(weatherData).as(w => w.temp)} 
+                            css="color: #c0caf5; font-weight: bold; font-size: 13px; font-family: 'JetBrains Mono', monospace;" 
                         />
                     </box>
                 </button>
@@ -173,7 +227,7 @@ export default function CenterBar(monitor: Gdk.Monitor) {
                         {/* Календарь слева */}
                         <CalendarContent />
 
-                        {/* Анимированный GIF справа с ручным рендером и масштабированием кадров */}
+                        {/* Анимированный GIF справа */}
                         <box 
                             valign={Gtk.Align.CENTER} 
                             halign={Gtk.Align.CENTER}
@@ -193,7 +247,7 @@ export default function CenterBar(monitor: Gdk.Monitor) {
                                         image.set_from_pixbuf(pixbuf)
                                         
                                         let delay = iter.get_delay_time()
-                                        if (delay <= 0) delay = 100 // fallback если в гифке нет задержки
+                                        if (delay <= 0) delay = 100
 
                                         iter.advance(null)
                                         GLib.timeout_add(GLib.PRIORITY_DEFAULT, delay, () => {
