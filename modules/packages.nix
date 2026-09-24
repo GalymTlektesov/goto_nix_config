@@ -53,6 +53,8 @@
     	nwg-dock-hyprland
     	zed-editor
     	inputs.zen-browser.packages.${pkgs.system}.default
+    	pkgs.pandoc
+    	telegram-desktop
 
     	quickshell
     	qt6.qtdeclarative
@@ -62,6 +64,7 @@
   		qt6.qtwebengine
   		kdePackages.kirigami
   		kdePackages.syntax-highlighting
+  		heroic
 
   		papirus-icon-theme
 

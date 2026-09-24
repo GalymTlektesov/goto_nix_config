@@ -31,6 +31,17 @@ const css = `
     .embedded-slider slider {
         min-width: 8px; min-height: 8px; background-color: #a6e3a1; border-radius: 50%; margin: -2px;
     }
+
+    .lang-btn {
+        background: transparent;
+        border: none;
+        padding: 0 4px;
+        box-shadow: none;
+    }
+    .lang-btn:hover {
+        background-color: rgba(203, 166, 247, 0.15);
+        border-radius: 6px;
+    }
     
     .tray-item { background: transparent; border: none; padding: 0 4px; }
     .tray-item icon { min-width: 16px; min-height: 16px; }
@@ -55,19 +66,58 @@ export default function RightBar(monitor: Gdk.Monitor) {
     const memPercent = Variable("0%").poll(30000, ["bash", "-c", "free -m | awk '/Mem:/ {printf \"%.0f%%\", $3/$2*100}'"])
     const memLabel = Variable.derive(
         [bind(memAlt), bind(memGigs), bind(memPercent)],
-        (alt, gigs, percent) => alt ? `  ${percent}` : `  ${gigs}`
+        (alt, gigs, percent) => alt ? `   ${percent}` : `   ${gigs}`
     )
 
     const net = Variable("Disconnected").poll(5000, ["bash", "-c", "ip route get 1.1.1.1 2>/dev/null | awk '{print $7}' || echo 'Disconnected'"])
     
     const lang = Variable("EN")
-    const updateLang = () => {
-        execAsync(["bash", "-c", "hyprctl devices | grep 'active keymap:' | head -n 1 | awk '{print $3}' | cut -c 1-2 | tr 'a-z' 'A-Z'"])
-            .then(out => lang.set(out || "EN"))
-            .catch(() => lang.set("EN"))
+
+    // Надежное получение текущей раскладки через JSON
+    const updateLang = async () => {
+        try {
+            const out = await execAsync(["hyprctl", "devices", "-j"])
+            const devices = JSON.parse(out)
+            const keyboards = devices.keyboards || []
+            // Находим основную клавиатуру (main: true) или берем первую попавшуюся
+            const keyboard = keyboards.find((kb: any) => kb.main) || keyboards[0]
+            
+            if (keyboard?.active_keymap) {
+                // Берем первые 2 символа и переводим в верхний регистр 
+                // (например: "Russian" -> "RU", "ru" -> "RU", "English (US)" -> "EN")
+                const langCode = keyboard.active_keymap.substring(0, 2).toUpperCase()
+                lang.set(langCode)
+            } else {
+                lang.set("EN")
+            }
+        } catch (err) {
+            console.error("Failed to update lang:", err)
+            lang.set("EN")
+        }
     }
+
+    // Надежное переключение раскладки на конкретной основной клавиатуре
+    const switchLayout = async () => {
+        try {
+            const out = await execAsync(["hyprctl", "devices", "-j"])
+            const devices = JSON.parse(out)
+            const keyboards = devices.keyboards || []
+            const keyboard = keyboards.find((kb: any) => kb.main) || keyboards[0]
+            
+            if (keyboard?.name) {
+                // Переключаем раскладку конкретно на основной клавиатуре (надежнее, чем "all")
+                await execAsync(["hyprctl", "switchxkblayout", keyboard.name, "next"])
+                // Небольшая задержка, чтобы Hyprland успел обновить внутреннее состояние перед чтением
+                setTimeout(() => updateLang(), 50)
+            }
+        } catch (err) {
+            console.error("Failed to switch layout:", err)
+        }
+    }
+
     updateLang()
-    hyprland.connect("keyboard-layout", updateLang)
+    // Используем стрелочную функцию, чтобы избежать проблем с передачей аргументов события
+    hyprland.connect("keyboard-layout", () => updateLang())
 
     return (
         <window
@@ -75,7 +125,6 @@ export default function RightBar(monitor: Gdk.Monitor) {
             className="RightBarWindow"
             gdkmonitor={monitor}
             exclusivity={Astal.Exclusivity.EXCLUSIVE}
-            // Растягиваем окно от левого до правого края, чтобы заставить Hyprland зарезервировать всю верхнюю полосу
             anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.LEFT | Astal.WindowAnchor.RIGHT}
             marginTop={3} 
             css="background-color: transparent;"
@@ -136,7 +185,13 @@ export default function RightBar(monitor: Gdk.Monitor) {
                         </box>
                     </box>
 
-                    <label className="lang-label" label={bind(lang).as(v => `󰌌  ${v}`)} />
+                    <button
+                        className="lang-btn"
+                        onClicked={switchLayout}
+                    >
+                        <label className="lang-label" label={bind(lang).as(v => `󰌌  ${v}`)} />
+                    </button>
+                    
                     <label className="net-label" label={bind(net).as(v => v === 'Disconnected' ? `󰖪  ${v}` : `󰈀  ${v}`)} />
 
                     {tray && (

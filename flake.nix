@@ -24,11 +24,15 @@
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-cachyos-kernel = {
+      url = "github:xddxdd/nix-cachyos-kernel/release";
+    };
 
     serpantinum.url = "github:ilyamiro/serpantinum";
   };
 
-  outputs = { self, nixpkgs, aagl, gslapper, caelestia-shell, serpantinum, ... }@inputs: {
+  outputs = { self, nixpkgs, aagl, gslapper, caelestia-shell, 
+    serpantinum, nix-cachyos-kernel, ... }@inputs: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -43,6 +47,7 @@
 
           ({ pkgs, ... }: {
             nixpkgs.overlays = [
+              nix-cachyos-kernel.overlays.pinned
               
               (final: prev: {
                 gslapper = gslapper.packages.${pkgs.system}.default;
