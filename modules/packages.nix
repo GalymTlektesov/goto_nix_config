@@ -71,6 +71,11 @@
     	#python3 с модулем websockets
     	(python3.withPackages (ps: with ps; [
       		websockets
+      		numpy
+    		matplotlib  # Добавили matplotlib
+  			pandas      # Если понадобится pandas
+  			scipy       # Если понадобится scipy
+  			requests
     	]))
 
 

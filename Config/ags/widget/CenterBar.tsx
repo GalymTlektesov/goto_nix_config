@@ -9,14 +9,14 @@ const CITY_LAT = "51.1694"
 const CITY_LON = "71.4491"
 
 function getWeatherIcon(code: number): string {
-    if (code === 0) return "󰖙" // Ясно
-    if (code >= 1 && code <= 3) return "󰖕" // Переменная облачность
-    if (code >= 45 && code <= 48) return "󰌵" // Туман
-    if (code >= 51 && code <= 67) return "󰖖" // Морось / Дождь
-    if (code >= 71 && code <= 77) return "󰼁" // Снег
-    if (code >= 80 && code <= 82) return "󰙾" // Ливень
-    if (code >= 85 && code <= 86) return "󰼁" // Снегопад
-    if (code >= 95 && code <= 99) return "󰙾" // Гроза
+    if (code === 0) return "󰖙"
+    if (code >= 1 && code <= 3) return "󰖕"
+    if (code >= 45 && code <= 48) return "󰌵"
+    if (code >= 51 && code <= 67) return "󰖖"
+    if (code >= 71 && code <= 77) return "󰼁"
+    if (code >= 80 && code <= 82) return "󰙾"
+    if (code >= 85 && code <= 86) return "󰼁"
+    if (code >= 95 && code <= 99) return "󰙾"
     return "󰖔"
 }
 
@@ -50,7 +50,6 @@ const time = Variable(new Date()).poll(1000, () => new Date())
 const showCalendar = Variable(false)
 const monthOffset = Variable(0)
 
-// Переменная для почасового прогноза (6 часов)
 const hourlyForecast = Variable<Array<{ time: string, temp: number, icon: string }>>([])
 
 async function fetchHourlyForecast() {
@@ -61,17 +60,12 @@ async function fetchHourlyForecast() {
         const json = JSON.parse(res)
         const now = new Date()
         
-        // Начало текущего часа (локальное время)
         const currentHourStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0, 0).getTime()
-        
-        // Если прошло больше 30 минут текущего часа, начинаем прогноз со следующего часа
-        // (например, в 12:33 верхняя строка будет 13:00, а в 12:15 — 12:00)
         const targetHourStart = now.getMinutes() > 30 ? currentHourStart + 3600000 : currentHourStart
 
         let startIndex = -1
         for (let i = 0; i < json.hourly.time.length; i++) {
             const t = json.hourly.time[i]
-            // Ручной парсинг для 100% избежания проблем с UTC/локальным временем
             const [datePart, timePart] = t.split('T')
             const [year, month, day] = datePart.split('-').map(Number)
             const [hour, minute] = timePart.split(':').map(Number)
@@ -83,7 +77,7 @@ async function fetchHourlyForecast() {
             }
         }
 
-        if (startIndex === -1) startIndex = 0 // Fallback на случай ошибок
+        if (startIndex === -1) startIndex = 0 
 
         const next6Hours = []
         for (let i = 0; i < 6; i++) {
@@ -106,7 +100,6 @@ async function fetchHourlyForecast() {
     }
 }
 
-// Переменная для защиты от слишком частых срабатываний скролла (дребезг)
 let lastScrollTime = 0
 
 function CalendarContent() {
@@ -116,14 +109,12 @@ function CalendarContent() {
         "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
     ]
 
-    // Используем derive, чтобы календарь перерисовывался мгновенно при изменении месяца И времени
     const calendarState = Variable.derive([time, monthOffset], (t, offset) => ({ time: t, offset }))
 
     return (
         <eventbox 
             onScrollEvent={(_, event) => {
                 const now = Date.now()
-                // Защита от слишком частых срабатываний (максимум 1 смена месяца в 250 мс)
                 if (now - lastScrollTime < 250) return true
                 lastScrollTime = now
 
@@ -169,12 +160,7 @@ function CalendarContent() {
                             : "color: #c0caf5; font-weight: bold; font-size: 13px; border-radius: 8px; min-height: 34px; min-width: 34px;"
                         
                         daysArray.push(
-                            <label 
-                                css={dayCss} 
-                                label={String(day)} 
-                                halign={Gtk.Align.CENTER}
-                                valign={Gtk.Align.CENTER}
-                            />
+                            <label css={dayCss} label={String(day)} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER} />
                         )
                     }
 
@@ -194,10 +180,7 @@ function CalendarContent() {
                                 css="background: transparent; border: none; padding: 0;"
                                 halign={Gtk.Align.START}
                             >
-                                <label 
-                                    css="color: #7dcfff; font-weight: bold; font-size: 14px; margin-bottom: 8px; margin-left: 4px;" 
-                                    label={`${monthNames[month]} ${year}`} 
-                                />
+                                <label css="color: #7dcfff; font-weight: bold; font-size: 14px; margin-bottom: 8px; margin-left: 4px;" label={`${monthNames[month]} ${year}`} />
                             </button>
                             <box homogeneous css="margin-bottom: 4px;">
                                 {dayNames.map(name => (
@@ -206,9 +189,7 @@ function CalendarContent() {
                             </box>
                             <box vertical spacing={4}>
                                 {weeks.map(week => (
-                                    <box homogeneous spacing={4}>
-                                        {week}
-                                    </box>
+                                    <box homogeneous spacing={4}>{week}</box>
                                 ))}
                             </box>
                         </box>
@@ -225,9 +206,7 @@ function AnimatedGif() {
 
     return (
         <box 
-            valign={Gtk.Align.CENTER} 
-            halign={Gtk.Align.CENTER}
-            css="padding: 10px;"
+            valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER} css="padding: 10px;"
             setup={(self) => {
                 try {
                     const anim = GdkPixbuf.PixbufAnimation.new_from_file(catGifPath)
@@ -236,11 +215,7 @@ function AnimatedGif() {
                     let timeoutId: number | null = null
 
                     const updateFrame = () => {
-                        const pixbuf = iter.get_pixbuf().scale_simple(
-                            gifSize, 
-                            gifSize, 
-                            GdkPixbuf.InterpType.BILINEAR
-                        )
+                        const pixbuf = iter.get_pixbuf().scale_simple(gifSize, gifSize, GdkPixbuf.InterpType.BILINEAR)
                         image.set_from_pixbuf(pixbuf)
                         
                         let delay = iter.get_delay_time()
@@ -257,11 +232,8 @@ function AnimatedGif() {
                     self.add(image)
                     self.show_all()
 
-                    // КРИТИЧЕСКИ ВАЖНО: Очищаем таймер при уничтожении виджета
                     self.connect('destroy', () => {
-                        if (timeoutId) {
-                            GLib.source_remove(timeoutId)
-                        }
+                        if (timeoutId) GLib.source_remove(timeoutId)
                     })
                 } catch (e) {
                     console.error("Ошибка загрузки GIF:", e)
@@ -275,9 +247,7 @@ function HourlyForecastWidget() {
     return (
         <box vertical spacing={8} valign={Gtk.Align.CENTER} css="padding: 10px; min-width: 80px;">
             {bind(hourlyForecast).as(forecast => {
-                if (!forecast || forecast.length === 0) {
-                    return <label label="Загрузка..." css="color: #c0caf5; font-size: 12px;" />
-                }
+                if (!forecast || forecast.length === 0) return <label label="Загрузка..." css="color: #c0caf5; font-size: 12px;" />
                 return forecast.map(hour => (
                     <box horizontal spacing={6} halign={Gtk.Align.CENTER}>
                         <label label={hour.time} css="color: #7dcfff; font-size: 12px; min-width: 35px;" />
@@ -290,6 +260,17 @@ function HourlyForecastWidget() {
     )
 }
 
+// Объединили все стили кнопки в один корректный CSS (никаких дубликатов атрибутов)
+const topBarCss = Variable.derive([showCalendar], (isOpen) => `
+    background-color: rgba(26, 27, 38, 0.85);
+    border: 1px solid rgba(122, 162, 247, 0.2);
+    border-radius: ${isOpen ? "16px 16px 0 0" : "16px"};
+    border-bottom-color: ${isOpen ? "transparent" : "rgba(122, 162, 247, 0.2)"};
+    padding: 5px 14px;
+    margin-bottom: -1px;
+    transition: all 0.2s ease-in-out;
+`)
+
 export default function CenterBar(monitor: Gdk.Monitor) {
     const formatTime = (date: Date) => {
         const hours = String(date.getHours()).padStart(2, '0')
@@ -299,19 +280,16 @@ export default function CenterBar(monitor: Gdk.Monitor) {
     }
 
     const formatDate = (date: Date) => {
-        const str = date.toLocaleDateString('ru-RU', { 
-            weekday: 'short', 
-            month: 'short', 
-            day: 'numeric' 
-        })
+        const str = date.toLocaleDateString('ru-RU', { weekday: 'short', month: 'short', day: 'numeric' })
         return str.charAt(0).toUpperCase() + str.slice(1)
     }
 
-    return (
+return (
         <window
             monitor={monitor}
             name="center-bar"
             namespace="ags-bar"
+            /* Привязываем ТОЛЬКО к верху. Окно сжато по центру и не блокирует остальной экран */
             anchor={Astal.WindowAnchor.TOP}
             exclusivity={Astal.Exclusivity.IGNORE}
             layer={Astal.Layer.TOP}
@@ -319,58 +297,62 @@ export default function CenterBar(monitor: Gdk.Monitor) {
             visible={true}
             css="background-color: transparent;"
         >
-            <box
-                vertical={true}
-                halign={Gtk.Align.CENTER}
-                css="background-color: rgba(26, 27, 38, 0.85); border-radius: 16px; border: 1px solid rgba(122, 162, 247, 0.2); padding: 5px 14px;"
-            >
+            {/* Органайзер по центру экрана с защитой от мертвой зоны */}
+            <box vertical halign={Gtk.Align.CENTER} valign={Gtk.Align.START}>
+                
+                {/* 1. Главная кнопка */}
                 <button
                     onClicked={() => {
                         const isOpen = !showCalendar.get()
                         showCalendar.set(isOpen)
-                        // Запрашиваем данные ТОЛЬКО при открытии
-                        if (isOpen) {
-                            fetchHourlyForecast()
-                        }
+                        if (isOpen) fetchHourlyForecast()
                     }}
-                    css="background: transparent; border: none; padding: 0; margin: 0;"
+                    css={bind(topBarCss)}
+                    halign={Gtk.Align.CENTER}
                 >
                     <box spacing={10} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER}>
                         <label label="" css="color: #7dcfff; font-size: 13px;" />
-                        <label 
-                            label={bind(time).as(formatTime)} 
-                            css="color: #c0caf5; font-weight: bold; font-size: 13px; font-family: 'JetBrains Mono', monospace;" 
-                        />
+                        <label label={bind(time).as(formatTime)} css="color: #c0caf5; font-weight: bold; font-size: 13px; font-family: 'JetBrains Mono', monospace;" />
                         <label label="|" css="color: rgba(190, 203, 247, 0.3); font-size: 13px;" />
-                        <label 
-                            label={bind(time).as(formatDate)} 
-                            css="color: #c0caf5; font-weight: bold; font-size: 13px;" 
-                        />
+                        <label label={bind(time).as(formatDate)} css="color: #c0caf5; font-weight: bold; font-size: 13px;" />
                         <label label="|" css="color: rgba(190, 203, 247, 0.3); font-size: 13px;" />
-                        <label 
-                            label={bind(weatherData).as(w => w.icon)} 
-                            css="color: #e0af68; font-size: 14px;" 
-                        />
-                        <label 
-                            label={bind(weatherData).as(w => w.temp)} 
-                            css="color: #c0caf5; font-weight: bold; font-size: 13px; font-family: 'JetBrains Mono', monospace;" 
-                        />
+                        <label label={bind(weatherData).as(w => w.icon)} css="color: #e0af68; font-size: 14px;" />
+                        <label label={bind(weatherData).as(w => w.temp)} css="color: #c0caf5; font-weight: bold; font-size: 13px; font-family: 'JetBrains Mono', monospace;" />
                     </box>
                 </button>
 
-                {/* Условный рендеринг: виджеты создаются только когда isOpen === true */}
-                {bind(showCalendar).as(isOpen => {
-                    if (!isOpen) {
-                        return <box css="min-height: 0px; min-width: 0px;" />
-                    }
-                    return (
-                        <box horizontal spacing={16} valign={Gtk.Align.CENTER} css="padding-top: 8px; border-top: 1px solid rgba(122, 162, 247, 0.1); margin-top: 8px;">
-                            <CalendarContent />
-                            <AnimatedGif />
-                            <HourlyForecastWidget />
+                {/* 2. Блок календаря с динамическим скрытием */}
+                <box 
+                    visible={false}
+                    halign={Gtk.Align.CENTER}
+                    setup={(self) => {
+                        showCalendar.subscribe((isOpen) => {
+                            if (isOpen) {
+                                self.visible = true
+                            } else {
+                                GLib.timeout_add(GLib.PRIORITY_DEFAULT, 200, () => {
+                                    if (!showCalendar.get()) self.visible = false
+                                    return GLib.SOURCE_REMOVE
+                                })
+                            }
+                        })
+                    }}
+                >
+                    <revealer 
+                        revealChild={bind(showCalendar)} 
+                        transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN} 
+                        transitionDuration={200}
+                    >
+                        <box css="background-color: rgba(26, 27, 38, 0.85); border: 1px solid rgba(122, 162, 247, 0.2); border-radius: 16px; padding: 16px;">
+                            <box horizontal spacing={16} valign={Gtk.Align.CENTER}>
+                                <CalendarContent />
+                                <AnimatedGif />
+                                <HourlyForecastWidget />
+                            </box>
                         </box>
-                    )
-                })}
+                    </revealer>
+                </box>
+
             </box>
         </window>
     )

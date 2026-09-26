@@ -83,7 +83,7 @@ export function LeftModulesBar() {
                     valign={Gtk.Align.CENTER}
                 >
                     <button
-                        css="color: #cdd6f4; padding: 0px 6px; font-size: 16px; background-color: transparent; border: none; border-radius: 4px; min-height: 0;"
+                        css="color: #cdd6f4; padding: 0px 4px; font-size: 16px; background-color: transparent; border: none; border-radius: 4px; min-height: 0;"
                         onClicked={() => {
                             const current = powerOpen.get()
                             closeAll()
@@ -115,7 +115,7 @@ export function LeftModulesBar() {
                         )}
                     </box>
 
-                    <box vertical={false} spacing={6} css="margin-left: 6px; padding-right: 4px;" visible={bind(hypr, "focusedClient").as(c => c !== null)} valign={Gtk.Align.CENTER}>
+                    <box vertical={false} spacing={4} css="margin-left: 6px; padding-right: 4px;" visible={bind(hypr, "focusedClient").as(c => c !== null)} valign={Gtk.Align.CENTER}>
                         <label label="❯" css="font-family: 'FiraCode Nerd Font', 'Comfortaa', sans-serif; font-weight: bold; font-size: 11px; color: #6c7086;" />
                         {bind(hypr, "focusedClient").as(client => {
                             if (!client) return <label label="" />;
