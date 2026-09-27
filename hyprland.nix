@@ -37,6 +37,7 @@
     libnotify
     pwvucontrol
     gslapper
+    zenity
 
     (ags.override {
       extraPackages = [

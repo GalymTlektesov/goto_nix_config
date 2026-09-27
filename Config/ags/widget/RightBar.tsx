@@ -1,5 +1,5 @@
 import { App, Astal, Gdk, Gtk } from "astal/gtk3"
-import { bind, Variable, execAsync } from "astal"
+import { bind, Variable, execAsync, exec } from "astal"
 import Wp from "gi://AstalWp"
 import Tray from "gi://AstalTray"
 import Hyprland from "gi://AstalHyprland"
@@ -136,7 +136,19 @@ Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default()!, provider, Gt
 const showWallpaperMenu = Variable(false)
 const selectedFolderPath = Variable<string | null>(null)
 const wallpaperFiles = Variable<string[]>([])
-const currentWallpaper = Variable<string | null>(null)
+const WALLPAPER_FILE = `${GLib.get_home_dir()}/.cache/ags_wallpaper.txt`
+
+// Читаем сохраненные обои при старте виджета
+const initWallpaper = () => {
+    try {
+        if (GLib.file_test(WALLPAPER_FILE, GLib.FileTest.EXISTS)) {
+            return exec(`cat ${WALLPAPER_FILE}`).trim()
+        }
+    } catch (e) {}
+    return null
+}
+
+const currentWallpaper = Variable<string | null>(initWallpaper())
 
 async function getVideoThumbnail(filePath: string): Promise<string | null> {
     const safeName = filePath.replace(/[^a-zA-Z0-9]/g, '_')
@@ -185,19 +197,25 @@ function loadWallpapersFromFolder(folderPath: string) {
     }
 }
 
-function openFolderChooser() {
-    const chooser = new Gtk.FileChooserDialog({
-        title: "Выберите папку с обоями",
-        action: Gtk.FileChooserAction.SELECT_FOLDER,
-    })
-    chooser.add_button("Отмена", Gtk.ResponseType.CANCEL)
-    chooser.add_button("Выбрать", Gtk.ResponseType.ACCEPT)
-
-    if (chooser.run() === Gtk.ResponseType.ACCEPT) {
-        const folder = chooser.get_filename()
-        if (folder) loadWallpapersFromFolder(folder)
+async function openFolderChooser() {
+    try {
+        // zenity запускается как отдельный процесс, поэтому Hyprland 
+        // безошибочно откроет его на текущем активном рабочем столе
+        const result = await execAsync([
+            "zenity", 
+            "--file-selection", 
+            "--directory", 
+            "--title=Выберите папку с обоями"
+        ])
+        
+        if (result) {
+            // убираем лишние пробелы/переносы строк в конце пути
+            loadWallpapersFromFolder(result.trim())
+        }
+    } catch (err) {
+        // zenity возвращает ошибку (код 1), если пользователь нажал "Отмена" или закрыл окно.
+        // Это нормальное поведение, просто ничего не делаем.
     }
-    chooser.destroy()
 }
 
 async function applyWallpaper(filePath: string) {
@@ -205,6 +223,9 @@ async function applyWallpaper(filePath: string) {
     const isVideo = [".mp4", ".webm", ".mkv"].some(ext => filePath.toLowerCase().endsWith(ext))
 
     try {
+        // Сохраняем путь в файл для следующих загрузок ПК
+        await execAsync(["bash", "-c", `echo "${filePath}" > ${WALLPAPER_FILE}`])
+
         await execAsync(["bash", "-c", "pkill -9 gslapper || true"])
         if (isVideo) {
             execAsync(["bash", "-c", `gslapper -o "loop" "*" "${filePath}" >/dev/null 2>&1 &`])
@@ -215,7 +236,6 @@ async function applyWallpaper(filePath: string) {
         console.error("Ошибка установки обоев:", err)
     }
 }
-
 function WallpaperItem({ file }: { file: string }) {
     const isVideo = [".mp4", ".webm", ".mkv"].some(v => file.toLowerCase().endsWith(v))
     const bgUrl = Variable<string | null>(isVideo ? null : file)
