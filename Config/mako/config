@@ -10,6 +10,13 @@ margin=10,10
 padding=15
 default-timeout=5000
 
+on-notify=exec pw-play "/home/goto/Music/tiktokio.com1788096912_mcz3ChElfCD8Q4TJBxEQ.mp3"
+
 [urgency=high]
 border-color=#f38ba8
 default-timeout=0
+
+
+[desktop-entry=org.telegram.desktop summary~="Маочка🌸"]
+on-notify=exec pw-play "/home/goto/Music/Tuturu (Anime Sound) - Sound Effect for editing.mp3"
+border-color=#FF00FF
